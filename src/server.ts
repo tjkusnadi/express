@@ -1,16 +1,26 @@
 import closeWithGrace from 'close-with-grace';
 import express from 'express';
+import pino from 'pino';
 import pinoHttp from 'pino-http';
 
+import {
+  postgresConnector
+} from './connectors';
+ 
 import { 
   config
 }  from './config';
-import {
-  logger
-} from './config/logger';
 import routes from './routes';
 
-const startServer: () => void = () => {
+const logger = pino({
+  ...config.logger,
+  redact: {
+    paths: ['password'],
+    censor: '[REDACTED]'
+  },
+});
+
+const startServer = async (): Promise<void> => {
   const app = express();
   const port = config.app.port;
     
@@ -20,23 +30,37 @@ const startServer: () => void = () => {
     autoLogging: true
   }));
   app.use('', routes);
+
+  const pool = await postgresConnector.connect({
+    ...config.postgres
+  }, logger);
+
   const server = app.listen(port, () => {
     logger.info(`Server running at http://localhost:${port}`);
   });
 
-  closeWithGrace(async ({ signal, err }) => {
+  closeWithGrace({ 
+    delay: 500,
+  }, async ({ signal, err }) => {
     logger.warn(`🛑 Received ${signal}, shutting down...`);
   
     if (err) {
       logger.error('Unhandled error before shutdown', err);
     }
-  
-    await new Promise((resolve) => server.close(resolve)); 
-  
-    logger.info('✅ Server shut down successfully.');
+
+    try {
+      await postgresConnector.disconnect(pool, logger);
+    
+      await new Promise<void>((resolve) => {
+        server.close(() => resolve());
+      });
+      
+      logger.info('✅ Server shut down successfully.');
+    } catch (shutdownError) {
+      logger.error('Error during shutdown:', shutdownError);
+      process.exit(1);
+    }
   });
 };
-
-
 
 export default startServer;
