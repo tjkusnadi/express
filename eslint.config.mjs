@@ -8,7 +8,8 @@ export default [
     files: ["**/*.ts", "**/*.tsx"],
     languageOptions: {
       globals: {
-        console: "readonly"
+        console: "readonly",
+        process: "readonly"
       },
       parser: tsParser,
       sourceType: "module",
