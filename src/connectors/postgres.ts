@@ -7,7 +7,10 @@ export const connect = async (
         host: string,
         database: string,
         password: string,
-        port: number
+        port: number,
+        ssl: {
+          rejectUnauthorized: boolean
+        }
     },
   logger: Logger,
 ) => {
