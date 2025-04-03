@@ -5,7 +5,7 @@ export default createRouter([
     path: '/healthcheck',
     method: 'get',
     handler: (_, res: Response) => {
-      res.json({
+      res.status(200).json({
         status: 'OK'
       });
     }
