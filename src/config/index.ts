@@ -15,6 +15,9 @@ export const config = {
     host: process.env.PG_HOST || 'host',
     database: process.env.PG_DATABASE || 'db',
     password: process.env.PG_PASSWORD || 'password',
-    port: Number(process.env.PG_PORT) || 5432
+    port: Number(process.env.PG_PORT) || 5432,
+    ssl: {
+      rejectUnauthorized: false
+    }
   }
 };
