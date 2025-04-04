@@ -21,7 +21,8 @@ export default [
       "no-console": "warn",
       "semi": ["error", "always"],
       "quotes": ["error", "single"],
-      "indent": ["error", 2]
+      "indent": ["error", 2],
+      "no-trailing-spaces": "error",
     }
   }
 ];

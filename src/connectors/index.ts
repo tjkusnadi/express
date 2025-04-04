@@ -1,5 +1,5 @@
 import * as postgresConnector from './postgres';
 
-export { 
+export {
   postgresConnector
 };

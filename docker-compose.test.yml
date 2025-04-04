@@ -1,0 +1,24 @@
+# docker-compose.test.yml
+version: '3.8'
+
+services:
+  postgres-test:
+    image: postgres:latest
+    container_name: postgres-test
+    restart: unless-stopped
+    ports:
+      - "5433:5432" # Expose port 5433 on host
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: test_db
+    volumes:
+      - pgdata_test:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user"]
+      interval: 2s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata_test:
