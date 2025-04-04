@@ -1,6 +1,10 @@
 import { Pool } from 'pg';
 import { Logger } from 'pino';
 
+type SSLMode = boolean | {
+  rejectUnauthorized: boolean;
+};
+
 export const connect = async (
   config: {
         user: string,
@@ -8,15 +12,14 @@ export const connect = async (
         database: string,
         password: string,
         port: number,
-        ssl: {
-          rejectUnauthorized: boolean
-        }
+        ssl: SSLMode
     },
   logger: Logger,
 ) => {
   const pool = new Pool(config);
 
   try {
+    logger.info('Connecting to PostgreSQL...');
     const client = await pool.connect();
     logger.info('Connected to PostgreSQL!');
     client.release();

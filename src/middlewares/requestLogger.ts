@@ -29,7 +29,7 @@ export const createRequestLogger = (pool: Pool) => {
         logEntry.userAgent
       ]);
     });
-            
+
 
     next();
   };

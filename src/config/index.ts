@@ -16,8 +16,8 @@ export const config = {
     database: process.env.PG_DATABASE || 'db',
     password: process.env.PG_PASSWORD || 'password',
     port: Number(process.env.PG_PORT) || 5432,
-    ssl: {
-      rejectUnauthorized: false
-    }
+    ssl: process.env.PG_SSL === 'true' ?
+    { rejectUnauthorized: false } as { rejectUnauthorized: boolean } :
+      false
   }
 };
