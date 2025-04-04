@@ -50,4 +50,4 @@ jobs:
           PG_PASSWORD: test_password
           PG_DATABASE: test_db
           PG_SSL: false
-        run: npm run test:integration
+        run: npm run test
