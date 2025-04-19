@@ -1,4 +1,11 @@
-.PHONY: build run stop clean
+.PHONY: build run stop clean list
+
+list:
+	@grep -E '^[a-zA-Z0-9][^:]*:' Makefile | \
+		grep -vE '^(#| |\.PHONY:)' | \
+		cut -d: -f1 | \
+		sort | \
+		uniq
 
 build:
 	docker build -t express-app .
